@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+//import PropTypes from 'prop-types'
 
 class Book extends Component {
+
+  cambio(value) {
+    console.log(value)
+  }
 
   render() {
     const { book } = this.props
@@ -9,9 +13,9 @@ class Book extends Component {
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={book.style}></div>
+          <div className="book-cover" style={{width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
           <div className="book-shelf-changer">
-            <select>
+            <select onChange={(event) => this.cambio(event.target.value)}>
               <option value="none" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
