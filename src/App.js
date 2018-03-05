@@ -1,7 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 import {Link} from 'react-router-dom'
-import Book from './Book.js'
+import Bookshelf from './Bookshelf'
 import Search from './Search'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
@@ -70,11 +70,6 @@ class BooksApp extends React.Component {
     })
   }
 
-  componentDidUpdate(){
-    console.log('didUpdate')
-    console.log(this.state.myBooks)
-  }
-
   updateShelf = (book, shelf) => {
     console.log(book)
     console.log(shelf)
@@ -114,51 +109,21 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      {currentlyReading.map((book) => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            onUpdateShelf={this.updateShelf}
-                          />
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Want to Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      {wantToRead.map((book) => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            onUpdateShelf={this.updateShelf}
-                          />
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      {read.map((book) => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            onUpdateShelf={this.updateShelf}
-                          />
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
+                <Bookshelf
+                  title='Currently Reading'
+                  books={currentlyReading}
+                  onUpdateShelf={this.updateShelf}
+                />
+                <Bookshelf
+                  title='Want to Read'
+                  books={wantToRead}
+                  onUpdateShelf={this.updateShelf}
+                />
+                <Bookshelf
+                  title='Read'
+                  books={read}
+                  onUpdateShelf={this.updateShelf}
+                />
               </div>
             </div>
             <div className="open-search">
