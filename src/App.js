@@ -8,7 +8,10 @@ import './App.css'
 class BooksApp extends React.Component {
 
   state = {
-    reading: [{
+    myBooks: [],
+
+    /*reading: [{
+      id: "6",
       title: "Ender's Game",
       authors: "Orson Scott Card",
       imageLinks: {
@@ -16,6 +19,7 @@ class BooksApp extends React.Component {
       }
     },
       {
+        id: "5",
         title: "Ender's Game2",
         authors: "Orson Scott Card",
         imageLinks: {
@@ -24,6 +28,7 @@ class BooksApp extends React.Component {
     }],
 
     wantRead: [{
+      id: "2",
       title: "The Hobbit",
       authors: "J.R.R Tolkien",
       imageLinks: {
@@ -31,6 +36,7 @@ class BooksApp extends React.Component {
       }
     },
     {
+      id: "1",
       title: "Ender's Game2",
       authors: "Orson Scott Card",
       imageLinks: {
@@ -39,6 +45,7 @@ class BooksApp extends React.Component {
     }],
 
     read: [{
+      id: "3",
       title: "1776",
       authors: "David McCullough",
       imageLinks: {
@@ -46,25 +53,50 @@ class BooksApp extends React.Component {
       }
     },
     {
+      id: "4",
       title: "Ender's Game2",
       authors: "Orson Scott Card",
       imageLinks: {
       thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
       }
-    }]
+    }]*/
   }
 
   componentDidMount(){
-    BooksAPI.search('Art', 20).then((reading) => {
+    /*BooksAPI.search('Art', 20).then((reading) => {
       this.setState({ reading })
       console.log(reading)
+    })*/
+
+    BooksAPI.getAll().then((books) => {
+      this.setState({myBooks: books})
+      console.log(books)
+    })
+  }
+
+  updateShelf = (book, shelf) => {
+    console.log(book.id)
+    console.log(shelf)
+    let newBook = book
+    newBook.shelf = shelf
+
+    this.setState((oldState) => {
+      oldState.myBooks.filter((b) => b.id !== newBook.id).concat(newBook)
     })
 
+    BooksAPI.update(book, shelf).then(() => {
+      console.log('updated!')
+    })
   }
   
   render() {
-    const { reading, wantRead, read } = this.state
-
+    //const { reading, wantRead, read } = this.state
+    let currentlyReading, wantToRead, read    
+    
+    currentlyReading = this.state.myBooks.filter((book) => book.shelf === 'currentlyReading')
+    wantToRead = this.state.myBooks.filter((book) => book.shelf === 'wantToRead')
+    read = this.state.myBooks.filter((book) => book.shelf === 'read')
+    
     return (
       <div className="app">
         <Route path='/search' render={() => (
@@ -103,10 +135,11 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {reading.map((book, index) => (
-                        <li key={index}>
+                      {currentlyReading.map((book) => (
+                        <li key={book.id}>
                           <Book
                             book={book}
+                            onUpdateShelf={this.updateShelf}
                           />
                         </li>
                       ))}
@@ -117,10 +150,11 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {wantRead.map((book, index) => (
-                        <li key={index}>
+                      {wantToRead.map((book) => (
+                        <li key={book.id}>
                           <Book
                             book={book}
+                            onUpdateShelf={this.updateShelf}
                           />
                         </li>
                       ))}
@@ -131,10 +165,11 @@ class BooksApp extends React.Component {
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {read.map((book, index) => (
-                        <li key={index}>
+                      {read.map((book) => (
+                        <li key={book.id}>
                           <Book
                             book={book}
+                            onUpdateShelf={this.updateShelf}
                           />
                         </li>
                       ))}
