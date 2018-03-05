@@ -9,6 +9,7 @@ class BooksApp extends React.Component {
 
   state = {
     myBooks: [],
+    results: []
 
     /*reading: [{
       id: "6",
@@ -63,39 +64,44 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount(){
-    /*BooksAPI.search('Art', 20).then((reading) => {
-      this.setState({ reading })
-      console.log(reading)
-    })*/
-
     BooksAPI.getAll().then((books) => {
       this.setState({myBooks: books})
-      console.log(books)
+    })
+
+    BooksAPI.search('Kafka', 20).then((results) => {
+      this.setState({ results: results })
     })
   }
 
+  componentDidUpdate(){
+    console.log('didUpdate')
+    console.log(this.state.myBooks)
+  }
+
   updateShelf = (book, shelf) => {
-    console.log(book.id)
+    console.log(book)
     console.log(shelf)
     let newBook = book
     newBook.shelf = shelf
 
-    this.setState((oldState) => {
-      oldState.myBooks.filter((b) => b.id !== newBook.id).concat(newBook)
-    })
-
     BooksAPI.update(book, shelf).then(() => {
-      console.log('updated!')
+      this.setState(state => ({
+        myBooks: state.myBooks.filter((b) => b.id !== newBook.id).concat([newBook])
+      }))
+      // console.log('DBupdated!')
+      //TODO: add success message
     })
   }
   
   render() {
-    //const { reading, wantRead, read } = this.state
-    let currentlyReading, wantToRead, read    
+    // console.log('rendering')
+    // console.log(this.state.myBooks)
+    let currentlyReading, wantToRead, read
+    let library = this.state.myBooks
     
-    currentlyReading = this.state.myBooks.filter((book) => book.shelf === 'currentlyReading')
-    wantToRead = this.state.myBooks.filter((book) => book.shelf === 'wantToRead')
-    read = this.state.myBooks.filter((book) => book.shelf === 'read')
+    currentlyReading = library.filter((book) => book.shelf === 'currentlyReading')
+    wantToRead = library.filter((book) => book.shelf === 'wantToRead')
+    read = library.filter((book) => book.shelf === 'read')
     
     return (
       <div className="app">
@@ -120,7 +126,16 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">
+                {this.state.results.map((book) => (
+                  <li key={book.id}>
+                    <Book
+                      book={book}
+                      onUpdateShelf={this.updateShelf}
+                    />
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         )}/>
