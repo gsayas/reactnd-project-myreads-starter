@@ -11,57 +11,6 @@ class BooksApp extends React.Component {
   state = {
     myBooks: [],
     results: []
-
-    /*reading: [{
-      id: "6",
-      title: "Ender's Game",
-      authors: "Orson Scott Card",
-      imageLinks: {
-        thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
-      }
-    },
-      {
-        id: "5",
-        title: "Ender's Game2",
-        authors: "Orson Scott Card",
-        imageLinks: {
-          thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
-        }
-    }],
-
-    wantRead: [{
-      id: "2",
-      title: "The Hobbit",
-      authors: "J.R.R Tolkien",
-      imageLinks: {
-        thumbnail: "http://books.google.com/books/content?id=pD6arNyKyi8C&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE70Rw0CCwNZh0SsYpQTkMbvz23npqWeUoJvVbi_gXla2m2ie_ReMWPl0xoU8Quy9fk0Zhb3szmwe8cTe4k7DAbfQ45FEzr9T7Lk0XhVpEPBvwUAztOBJ6Y0QPZylo4VbB7K5iRSk&source=gbs_api"
-      }
-    },
-    {
-      id: "1",
-      title: "Ender's Game2",
-      authors: "Orson Scott Card",
-      imageLinks: {
-      thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
-      }
-    }],
-
-    read: [{
-      id: "3",
-      title: "1776",
-      authors: "David McCullough",
-      imageLinks: {
-        thumbnail: "http://books.google.com/books/content?id=uu1mC6zWNTwC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73pGHfBNSsJG9Y8kRBpmLUft9O4BfItHioHolWNKOdLavw-SLcXADy3CPAfJ0_qMb18RmCa7Ds1cTdpM3dxAGJs8zfCfm8c6ggBIjzKT7XR5FIB53HHOhnsT7a0Cc-PpneWq9zX&source=gbs_api"
-      }
-    },
-    {
-      id: "4",
-      title: "Ender's Game2",
-      authors: "Orson Scott Card",
-      imageLinks: {
-      thumbnail: "http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api"
-      }
-    }]*/
   }
 
   componentDidMount(){
@@ -71,8 +20,6 @@ class BooksApp extends React.Component {
   }
 
   updateShelf = (book, shelf) => {
-    console.log(book)
-    console.log(shelf)
     let newBook = book
     newBook.shelf = shelf
 
@@ -86,20 +33,21 @@ class BooksApp extends React.Component {
   }
   
   render() {
+    const { myBooks } = this.state
     // console.log('rendering')
     // console.log(this.state.myBooks)
     let currentlyReading, wantToRead, read
-    let library = this.state.myBooks
     
-    currentlyReading = library.filter((book) => book.shelf === 'currentlyReading')
-    wantToRead = library.filter((book) => book.shelf === 'wantToRead')
-    read = library.filter((book) => book.shelf === 'read')
+    currentlyReading = myBooks.filter((book) => book.shelf === 'currentlyReading')
+    wantToRead = myBooks.filter((book) => book.shelf === 'wantToRead')
+    read = myBooks.filter((book) => book.shelf === 'read')
     
     return (
       <div className="app">
         <Route path='/search' render={() => (
           <Search
             onUpdateShelf={this.updateShelf}
+            myBooks={myBooks}
           />
         )}/>
         <Route exact path='/' render={() => (

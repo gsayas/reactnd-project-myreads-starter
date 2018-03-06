@@ -1,38 +1,51 @@
 import React from 'react'
-import {Route} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import Book from './Book.js'
 import * as BooksAPI from './BooksAPI'
-import BooksApp from "./App";
+import PropTypes from "prop-types";
 
 class Search extends React.Component {
+  static propTypes = {
+    myBooks: PropTypes.array.isRequired,
+    onUpdateShelf: PropTypes.func.isRequired
+  }
 
   state = {
-    query: '',
     results: []
   }
 
   updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-  }
-
-  render() {
-    const { query } = this.state
-    const { onUpdateShelf } = this.props
-
-    let showingBooks = []
     if(query){
-      BooksAPI.search(query, 0).then((results) => {
+      BooksAPI.search(query.trim(), 0).then((results) => {
+        if(results)
         this.setState({ results: results })
       })
     }
+  }
+
+  render() {
+    const { results } = this.state
+    const { onUpdateShelf, myBooks } = this.props
+
+    let showingBooks = []
+    let myBook
 
     // add current shelf to each one of the resulting books
-    // showingBooks = this.state.results.map((book) => (
-    //
-    // ))
+    try {
+      if (results && Array.isArray(results))
+        showingBooks = results.map((book) => {
+          myBook = myBooks.find(b => b.id === book.id)
+          if (myBook) {
+            book.shelf = myBook.shelf
+          }
+          return book
+        })
+    }catch(ex){
+      console.log(ex)
+      console.log(results)
+    }
 
-    // showingContacts.sort(sortBy('name'))
+    // showingBooks.sort(sortBy('title'))
 
     return (
       <div className="search-books">
@@ -52,7 +65,6 @@ class Search extends React.Component {
                 */}
             <input type="text"
                    placeholder="Search by title or author"
-                   value={query}
                    onChange={(event) => this.updateQuery(event.target.value)}
             />
 
@@ -60,7 +72,7 @@ class Search extends React.Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.results.map((book) => (
+            {showingBooks.map((book) => (
               <li key={book.id}>
                 <Book
                   book={book}
