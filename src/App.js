@@ -16,7 +16,7 @@ class BooksApp extends React.Component {
   componentDidMount(){
     BooksAPI.getAll().then((books) => {
       this.setState({myBooks: books})
-    })
+    });
   }
 
   updateShelf = (book, shelf) => {
@@ -27,20 +27,12 @@ class BooksApp extends React.Component {
       this.setState(state => ({
         myBooks: state.myBooks.filter((b) => b.id !== newBook.id).concat([newBook])
       }))
-      // console.log('DBupdated!')
       //TODO: add success message
     })
-  }
+  };
   
   render() {
-    const { myBooks } = this.state
-    // console.log('rendering')
-    // console.log(this.state.myBooks)
-    let currentlyReading, wantToRead, read
-    
-    currentlyReading = myBooks.filter((book) => book.shelf === 'currentlyReading')
-    wantToRead = myBooks.filter((book) => book.shelf === 'wantToRead')
-    read = myBooks.filter((book) => book.shelf === 'read')
+    const {myBooks} = this.state;
     
     return (
       <div className="app">
@@ -59,17 +51,20 @@ class BooksApp extends React.Component {
               <div>
                 <Bookshelf
                   title='Currently Reading'
-                  books={currentlyReading}
+                  shelfName='currentlyReading'
+                  library={myBooks}
                   onUpdateShelf={this.updateShelf}
                 />
                 <Bookshelf
                   title='Want to Read'
-                  books={wantToRead}
+                  shelfName='wantToRead'
+                  library={myBooks}
                   onUpdateShelf={this.updateShelf}
                 />
                 <Bookshelf
                   title='Read'
-                  books={read}
+                  shelfName='read'
+                  library={myBooks}
                   onUpdateShelf={this.updateShelf}
                 />
               </div>

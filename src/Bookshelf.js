@@ -4,13 +4,16 @@ import PropTypes from "prop-types";
 
 class Bookshelf extends React.Component {
   static propTypes = {
-    books: PropTypes.array.isRequired,
+    library: PropTypes.array.isRequired,
     onUpdateShelf: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    shelfName: PropTypes.string.isRequired
   }
 
   render() {
-    const {title, books, onUpdateShelf} = this.props
+    const {title, shelfName, library, onUpdateShelf} = this.props;
+
+    const books = library.filter((book) => book.shelf === shelfName);
 
     return (
       <div className="bookshelf">

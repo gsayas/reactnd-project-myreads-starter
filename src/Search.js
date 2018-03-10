@@ -17,33 +17,33 @@ class Search extends React.Component {
   updateQuery = (query) => {
     if(query){
       BooksAPI.search(query.trim(), 0).then((results) => {
-        this.setState({ results: results })
+        this.setState({results: results})
       })
     }else{
-      this.setState({ results: [] })
+      this.setState({results: []})
     }
-  }
+  };
 
   render() {
-    const { results } = this.state
-    const { onUpdateShelf, myBooks } = this.props
+    const {results} = this.state;
+    const {onUpdateShelf, myBooks} = this.props;
 
-    let showingBooks = []
-    let myBook
+    let showingBooks = [];
+    let myBook;
 
     // add current shelf to each one of the resulting books
     try {
       if (results && Array.isArray(results))
-        showingBooks = results.map((book) => {
+        showingBooks = results.map( book => {
           myBook = myBooks.find(b => b.id === book.id)
           if (myBook) {
             book.shelf = myBook.shelf
           }
           return book
-        })
+        });
     }catch(ex){
-      console.log(ex)
-      console.log(results)
+      console.log(ex);
+      console.log(results);
     }
 
     // showingBooks.sort(sortBy('title'))

@@ -9,7 +9,7 @@ class Book extends Component {
   }
 
   render() {
-    const { book, onUpdateShelf } = this.props
+    const {book, onUpdateShelf} = this.props;
 
     return (
       <div className="book">
@@ -26,7 +26,9 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors}</div>
+        {Array.isArray(book.authors) && book.authors.map((author, index) => (
+          <div key={index} className="book-authors">{author}</div>
+        ))}
       </div>
     )
   }
