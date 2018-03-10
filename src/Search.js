@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import Book from './Book.js'
 import * as BooksAPI from './BooksAPI'
 import PropTypes from "prop-types";
+import sortBy from 'sort-by'
 
 class Search extends React.Component {
   static propTypes = {
@@ -14,6 +15,11 @@ class Search extends React.Component {
     results: []
   }
 
+
+  // Whenever the query field is updated this function
+  // gets called. Then the 'results' array in the state is updated
+  // with the response from BooksAPI.search().
+  // If the query field is empty then the array is cleaned.
   updateQuery = (query) => {
     if(query){
       BooksAPI.search(query.trim(), 0).then((results) => {
@@ -31,8 +37,13 @@ class Search extends React.Component {
     let showingBooks = [];
     let myBook;
 
-    // add current shelf to each one of the resulting books
+    //add current shelf to each one of the resulting books
+    //I added a try/catch block to protect the user from
+    //seeing nasty errors because of unexpected responses from the search API
     try {
+      //Check that the results is an array to avoid TypeCast erors
+      //for example, when putting a string like "sdfsdfsdfsdfsdfsdfwef" in the query
+      // the search function of the API would return an error object instead of an empty array
       if (results && Array.isArray(results))
         showingBooks = results.map( book => {
           myBook = myBooks.find(b => b.id === book.id)
@@ -46,7 +57,8 @@ class Search extends React.Component {
       console.log(results);
     }
 
-    // showingBooks.sort(sortBy('title'))
+    // sort books by title
+    showingBooks.sort(sortBy('title'))
 
     return (
       <div className="search-books">

@@ -13,12 +13,16 @@ class BooksApp extends React.Component {
     results: []
   }
 
+  //Load all the books in my 'library' (server) and put them in my state
   componentDidMount(){
     BooksAPI.getAll().then((books) => {
       this.setState({myBooks: books})
     });
   }
 
+  //this function handles the change shelf action on each book
+  //it is passed to the Book component by both the Search Component (search page) and
+  //the Bookshelf component (homepage)
   updateShelf = (book, shelf) => {
     let newBook = book
     newBook.shelf = shelf
